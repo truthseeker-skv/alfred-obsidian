@@ -63,6 +63,3 @@ function handleFilter(entry: EntryInfo, query: string, options: IFilterPathOptio
 
   return match;
 }
-
-// const entries = filterFiles('~/', { type: 'directories' });
-// entries; // ?

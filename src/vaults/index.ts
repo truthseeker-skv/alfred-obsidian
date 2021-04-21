@@ -1,25 +1,35 @@
+import { Dirent } from 'fs';
+
 import { createItem, ItemType } from '../alfred-workflow/item';
-import logger from '../alfred-workflow/logger';
 import { filterFiles } from '../alfred-workflow/utils/fs-filter';
-import { IVaultConfig, vaultsConfig } from '../config';
+import { IVaultConfig } from '../config';
 import { folderIcon, fileIcon, questionIcon, settingsIcon } from '../icons';
-import { Action, showVaultsList, addVault, showEditVaultOptions, deleteVault, setVaultPath } from './actions';
-import workflow from './workflow';
+import {
+  Action,
+  showVaultsList,
+  addVault,
+  showEditVaultOptions,
+  deleteVault,
+  setVaultPath,
+  setVaultActive,
+  loadDefaultParamsIfRequired,
+} from './actions';
+import workflow from '../workflow';
 
 export default async () => {
   const { action, payload } = workflow.variables.all();
-
-  // if (vaultsConfig.hasVaults() && !action) {
-  //   vaultsConfig.clear();
-  // }
-  logger.log('====>>> Logging actions: ', action, payload, vaultsConfig.getVaults());
 
   switch (action) {
     case Action.AddVault:
       addVault(payload.name);
       break;
 
+    case Action.SetActive:
+      setVaultActive(payload.name);
+      break;
+
     case Action.ShowEditVaultOptions:
+      loadDefaultParamsIfRequired(payload.name);
       showEditVaultOptions(payload.name);
       break;
 
@@ -48,6 +58,16 @@ async function showFilesFilter(vault: string, target: keyof IVaultConfig) {
     showHidden: false,
   });
 
+  const itemIcon = (dirent?: Dirent) => {
+    if (dirent?.isDirectory()) {
+      return folderIcon();
+    }
+    if (dirent?.isFile()) {
+      return fileIcon();
+    }
+    return questionIcon();
+  };
+
   let items = entries.map((entry) => (
     createItem({
       title: entry.path,
@@ -56,15 +76,7 @@ async function showFilesFilter(vault: string, target: keyof IVaultConfig) {
       valid: false,
       type: ItemType.File,
       icon: {
-        path: (() => {
-          if (entry.dirent?.isDirectory()) {
-            return folderIcon();
-          }
-          if (entry.dirent?.isFile()) {
-            return fileIcon();
-          }
-          return questionIcon();
-        })(),
+        path: itemIcon(entry.dirent),
       },
     })
   ));

@@ -15,14 +15,18 @@ export function getWorkflow<T>(params: WorkflowOptions<T> = {}) {
   const variables: Variables = initVariables();
 
   function sendResult(
-    itemsCreators?: Array<ItemCreator>,
+    itemsCreators?: ItemCreator | Array<ItemCreator>,
     params: ISendFeedbackParams = {}
   ) {
+    const items = Array.isArray(itemsCreators)
+      ? itemsCreators
+      : [itemsCreators].filter(Boolean);
+
     console.log(
       JSON.stringify({
         variables: variables.obj(),
-        items: itemsCreators?.map((it) => (
-          it.obj({ workflowVariables: variables })
+        items: items.map((it) => (
+          it!.obj({ workflowVariables: variables })
         )),
         rerun: params.rerunInterval,
       }, null, 2)

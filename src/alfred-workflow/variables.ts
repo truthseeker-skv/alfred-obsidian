@@ -22,6 +22,8 @@ export function initVariables(vars?: Record<string, any>) {
     get: (path: string) => getParam(variables, path),
     set,
     update,
-    obj: () => ({ [prefix]: JSON.stringify(variables, null, 2) }),
+    obj: () => ({
+      [prefix]: JSON.stringify(variables, null, 2),
+    }),
   };
 }
