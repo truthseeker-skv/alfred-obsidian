@@ -27,7 +27,7 @@ module.exports = (env) => {
       filename: '[name].js',
     },
     mode: isDev ? 'development' : 'production',
-    devtool: undefined,
+    devtool: isDev ? 'source-map' : undefined,
     watch: !!isDev,
     optimization: {
       splitChunks: {
@@ -44,13 +44,17 @@ module.exports = (env) => {
     module: {
       rules: [
         {
-          test: /\.tsx?$/,
+          test: /(?<!\.d)\.tsx?$/,
           exclude: /node_modules/,
           use: [
             {
               loader: 'ts-loader',
             },
           ],
+        },
+        {
+          test: /\.d\.tsx?$/,
+          loader: 'ignore-loader'
         },
         {
           test: /\.(icns|png|gif|jpe?g)$/,

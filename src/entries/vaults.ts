@@ -1,4 +1,5 @@
-import { run } from '../alfred-workflow';
-import vaultsStage from '../vaults';
+import { run } from '@truthseeker-skv/alfred-workflow';
 
-run(vaultsStage);
+import vaultsConfiguration from '../vaults';
+
+run(vaultsConfiguration);

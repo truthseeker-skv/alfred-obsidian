@@ -3,7 +3,6 @@ import invariant from 'invariant';
 import workflow from './workflow';
 
 export interface IConfig {
-  notesSearchIndexes?: string, // TODO: check type and set correct one
   vaults?: Record<IVaultConfig['name'], IVaultConfig>;
 }
 
