@@ -1,7 +1,6 @@
 import { IVaultConfig } from './config';
 
 export enum Action {
-  // Vaults actions
   ShowVaultsList = 'vaults-list',
   AddVault = 'add-vault',
   ShowEditVaultOptions = 'edit-vault',
@@ -9,8 +8,6 @@ export enum Action {
   SetActiveVault = 'set-active-vault',
   ShowSetPath = 'show-set-path',
   SetPath = 'set-path',
-
-  // Notes actions
 }
 
 export function showVaultsListAction() {
