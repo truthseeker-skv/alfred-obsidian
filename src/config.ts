@@ -20,16 +20,14 @@ export interface IVaultConfig {
 export const config = workflow.config;
 
 export const vaultsConfig = (() => {
-  const conf = workflow.config;
-
   const hasVaults = () => !!Object.keys(getVaults()).length;
 
   const getVaults = (): Record<string, IVaultConfig> => {
-    return conf.get('vaults', {})
+    return config.get('vaults', {})
   };
 
   const isVaultProp = (vault: string, prop: keyof IVaultConfig): boolean => {
-    return Boolean(conf.get(`vaults.${vault}.${prop}`));
+    return Boolean(config.get(`vaults.${vault}.${prop}`));
   };
 
   const addVault = (vault: IVaultConfig) => {
@@ -40,12 +38,12 @@ export const vaultsConfig = (() => {
     if (!hasVaults()) {
       vault.isActive = true;
     }
-    conf.set('vaults', vaults);
+    config.set('vaults', vaults);
   };
 
   const setVaultProp = (vault: string, propPath: keyof IVaultConfig, value: string) => {
     invariant(vault && propPath && value, 'setVaultProp: incorrect data', vault, propPath, value);
-    conf.set(`vaults.${vault}.${propPath}`, value);
+    config.set(`vaults.${vault}.${propPath}`, value);
   };
 
   const getActiveVault = () => {
@@ -54,26 +52,26 @@ export const vaultsConfig = (() => {
   };
 
   const setVaultActive = (vault: string) => {
-    Object.keys(conf.get('vaults') || []).forEach((v) => {
-      conf.set(`vaults.${v}.isActive`, v === vault);
+    Object.keys(config.get('vaults') || []).forEach((v) => {
+      config.set(`vaults.${v}.isActive`, v === vault);
     });
   };
 
   const isVaultActive = (vault: string) => {
-    return Boolean(conf.get(`vaults.${vault}.isActive`));
+    return Boolean(config.get(`vaults.${vault}.isActive`));
   };
 
   const getVaultProp = <T>(vault: string, propPath: keyof IVaultConfig): T => {
-    return conf.get(`vaults.${vault}.${propPath}`);
+    return config.get(`vaults.${vault}.${propPath}`);
   };
 
   const deleteVault = (name: string) => {
     let { [name]: _, ...rest } = getVaults();
-    conf.set('vaults', rest);
+    config.set('vaults', rest);
   };
 
   const clear= () => {
-    conf.delete('vaults');
+    config.delete('vaults');
   };
 
   return {
